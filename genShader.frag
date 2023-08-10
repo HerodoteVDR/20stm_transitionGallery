@@ -49,19 +49,28 @@ void main() {
   
   uv.x *= width/height;
   // shape
-  // float d = sdCircle(uv, 0.5);
+//   float d = sdCircle(uv, 0.5);
   float d = sdArc(uv, sc, 0.4,0.);
   
   // d = abs(d);
   d = sin(d);
   d = 0.02 / d;
-  d = step(sin(millis) * 0.1, d);
-//  d = smoothstep(sin(millis) * 0.1,sin(millis*0.02), d);
+//  d *= 0.02;
+//  d = step(sin(millis) * 0.1, d);
+  d = smoothstep(sin(millis) * 0.1,sin(millis*0.02), d);
+
+
+  float dB = d * -1.;
+  vec4 colB = vec4(0.5,0.5,0.5,1.);
+  colB *= dB;
 
   vec4 col = vec4(d,d,d,d);
   vec4 imageCol = texture2D(image,initPos);
 
+  col+= colB;
+
   col *= imageCol;
+
 
 
 
