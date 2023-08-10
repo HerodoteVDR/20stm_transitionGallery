@@ -14,6 +14,8 @@ uniform float height;
 uniform float mPosX;
 uniform float mPosY;
 
+uniform sampler2D image;
+
 
 
 
@@ -32,9 +34,12 @@ float sdArc( in vec2 p, in vec2 sc, in float ra, float rb )
 
 void main() {
   vec2 uv = pos * 2. - 1.;
-  
-  uv.x += 0.;
-  uv.y += 0.;
+  vec2 initPos = uv;
+
+//  mPosY += height / 2.;
+
+  uv.x -= (mPosX - width / 2.) * 0.0001;
+  uv.y += (mPosY - height / 2.) * 0.0001781;
   
   
   float tb = 3.14*(0.5+0.5*cos(millis*0.31+2.0));
@@ -45,15 +50,22 @@ void main() {
   uv.x *= width/height;
   // shape
   // float d = sdCircle(uv, 0.5);
-  float d = sdArc(uv, sc, millis,1.);
+  float d = sdArc(uv, sc, 0.4,0.);
   
   // d = abs(d);
   d = sin(d);
-  d = 0.2 / d;
-  d = step(0.3, d);
-  
-  vec3 col = vec3(d,d,d);
-  gl_FragColor = vec4(col,1.);
+  d = 0.02 / d;
+  d = step(sin(millis) * 0.1, d);
+//  d = smoothstep(sin(millis) * 0.1,sin(millis*0.02), d);
+
+  vec4 col = vec4(d,d,d,d);
+  vec4 imageCol = texture2D(image,initPos);
+
+  col *= imageCol;
+
+
+
+  gl_FragColor = col;
 }
 
 
