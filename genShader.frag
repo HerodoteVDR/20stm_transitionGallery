@@ -46,7 +46,7 @@ void main() {
   float d = dArc(uv, arcCenter, 0.6  , 0., rotation);
 
   d = sin(d * 0.2);
-  d = 0.02 / d;
+  d = mPosY * .0008 / d;
 
   float dA = smoothstep(1.,5., d);
   float dB = smoothstep(5.,1., d);
