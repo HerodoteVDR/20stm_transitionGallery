@@ -6,12 +6,19 @@ let images = [
 ];
 let currentImageIndex = 0; // Index de l'image actuelle
 
+let transitionDuration = 1.;
+
 
 function preload() {
   genShader = loadShader('shader.vert', 'genShader.frag');
   for (let i = 0; i < images.length; i++) {
     images[i] = loadImage(images[i]);
   }
+
+  let gif = createImg("https://giphy.com/gifs/sunrise-P1DabzbaZV0Nq");
+  gif.hide(); // Cacher l'élément img DOM
+  gifTexture = createGraphics(gif.width, gif.height);
+  gifTexture.image(gif, 0, 0);
 }
 
 function setup() {
@@ -44,5 +51,10 @@ function windowResized() {
 }
 
 function mouseClicked() {
+
+
+
+
+
   currentImageIndex = (currentImageIndex + 1) % images.length;
 }
