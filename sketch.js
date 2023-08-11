@@ -12,7 +12,7 @@ function preload() {
 }
 
 function setup() {
-  createCanvas(screen.width, screen.height, WEBGL);
+  createCanvas(window.innerWidth, window.innerHeight, WEBGL);
 
   shader(genShader); // Appliquer le shader une fois au début
 
@@ -35,4 +35,8 @@ function draw() {
   shader(genShader);
   // Draw a rectangle with the shader
   rect(0, 0, width, height);
+}
+
+function windowResized() {
+  resizeCanvas(window.innerWidth, window.innerHeight);
 }
