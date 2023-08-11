@@ -21,55 +21,56 @@ float sdCircle( vec2 p, float r )
     return length(p) - r;
 }
 
-float sdArc( in vec2 p, in vec2 sc, in float ra, float rb )
+float sdArc(in vec2 p, in vec2 sc, in float ra, float rb, float rotation)
 {
-    p.x = abs(p.x);
-    return (sc.y*p.x > sc.x*p.y) ? length(p - ra*sc) - rb : abs(length(p) - ra) - rb;
+  p = mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * p;
+  p.x = abs(p.x);
+  return (sc.y * p.x > sc.x * p.y) ? length(p - ra * sc) - rb : abs(length(p) - ra) - rb;
 }
-
 
 void main() {
   vec2 uv = pos * 2. - 1.;
   vec2 initPos = uv;
 
-//  mPosY += height / 2.;
 
-  uv.x -= (mPosX - width / 2.) * 0.0001;
-  uv.y += (mPosY - height / 2.) * 0.0001781;
 
-  float arcFullRevolution = 2.*(0.5+0.5*cos(millis*0.31+3.));
+
+  uv.x -= (mPosX - width / 2.) * 0.0003;
+  uv.y += (mPosY - height / 2.) * 0.0005343;
+
+  float arcFullRevolution = 2.14*(0.5+0.5*cos(millis*0.7+0.));
   float borderRadius = 5.*(0.5+0.5*cos(millis*0.41+3.0));
   vec2  arcCenter = vec2(sin(arcFullRevolution),cos(arcFullRevolution));
-  
+  float rotation = 2.0 * 3.141592653589793 * (millis) * 0.2;  // Rotation based on millis
   
   uv.x *= width/height;
   // shape
 //   float d = sdCircle(uv, 0.5);
-  float d = sdArc(uv, arcCenter, 0.4,0.);
+  float d = sdArc(uv, arcCenter, 0.6  , 0., rotation);
 
   // d = abs(d);
-  d = sin(d);
+  d = sin(d * 0.2);
   d = 0.02 / d;
+
 //  d *= 0.02;
-  d = step( 0.3, d);
+//  d = step(0.17, d);
 //  d = smoothstep(sin(millis) * 0.1,sin(millis*0.02), d);
 
 
   float dB = d * -1.;
-  vec4 colB = vec4(0.5,0.5,0.5,1.);
+  vec4 colB = vec4(0.5,2.,0.5,1.);
   colB *= dB;
 
-  vec4 col = vec4(d,d,d,d);
-  vec4 imageCol = texture2D(image,initPos);
 
-  col+= colB;
+  vec4 imageCol = texture2D(image,initPos) * d;
 
-  col *= imageCol;
+//  col += colB;
 
 
 
 
-  gl_FragColor = col;
+
+  gl_FragColor = imageCol;
 }
 
 
