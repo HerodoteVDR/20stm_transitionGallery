@@ -64,7 +64,7 @@ void main() {
   initUv.x *= width / height;
   float bgD = sin(d*8. + millis)/8.;
   bgD = abs(bgD);
-  vec4 bCol = vec4(vec3(0.035, 0.043, 0.149) * d, 1.) * dB;
+  vec4 bCol = vec4(vec3(0.035, 0.043, 0.149) * (bgD + 0.5), 1.) * dB;
 
   gl_FragColor = imageColA + bCol;
 }
