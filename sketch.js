@@ -30,7 +30,8 @@ function draw() {
   genShader.setUniform("millis", millis() * 0.001)
   genShader.setUniform("mPosX", mouseX)
   genShader.setUniform("mPosY", mouseY)
-  genShader.setUniform("image", images[0]);
+  genShader.setUniform("imageA", images[0]);
+  genShader.setUniform("imageB", images[1])
 
   shader(genShader);
   // Draw a rectangle with the shader

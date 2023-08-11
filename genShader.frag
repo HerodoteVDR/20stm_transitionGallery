@@ -14,14 +14,15 @@ uniform float height;
 uniform float mPosX;
 uniform float mPosY;
 
-uniform sampler2D image;
+uniform sampler2D imageA;
+uniform sampler2D imageB;
 
-float sdCircle( vec2 p, float r )
+float dCircle( vec2 p, float r )
 {
     return length(p) - r;
 }
 
-float sdArc(in vec2 p, in vec2 sc, in float ra, float rb, float rotation)
+float dArc(in vec2 p, in vec2 sc, in float ra, float rb, float rotation)
 {
   p = mat2(cos(rotation), -sin(rotation), sin(rotation), cos(rotation)) * p;
   p.x = abs(p.x);
@@ -30,10 +31,8 @@ float sdArc(in vec2 p, in vec2 sc, in float ra, float rb, float rotation)
 
 void main() {
   vec2 uv = pos * 2. - 1.;
-  vec2 initPos = uv;
-
-
-
+  vec2 initPos = pos;
+  initPos.y =1. - pos.y;
 
   uv.x -= (mPosX - width / 2.) * 0.0003;
   uv.y += (mPosY - height / 2.) * 0.0005343;
@@ -44,35 +43,16 @@ void main() {
   float rotation = 2.0 * 3.141592653589793 * (millis) * 0.2;  // Rotation based on millis
   
   uv.x *= width/height;
-  // shape
-//   float d = sdCircle(uv, 0.5);
-  float d = sdArc(uv, arcCenter, 0.6  , 0., rotation);
+  float d = dArc(uv, arcCenter, 0.6  , 0., rotation);
 
-  // d = abs(d);
   d = sin(d * 0.2);
   d = 0.02 / d;
 
-//  d *= 0.02;
-//  d = step(0.17, d);
-//  d = smoothstep(sin(millis) * 0.1,sin(millis*0.02), d);
+  float dA = smoothstep(1.,5., d);
+  float dB = smoothstep(5.,1., d);
 
+  vec4 imageColA = texture2D(imageA,initPos) * dA;
+  vec4 imageColB = texture2D(imageB, initPos) * dB;
 
-  float dB = d * -1.;
-  vec4 colB = vec4(0.5,2.,0.5,1.);
-  colB *= dB;
-
-
-  vec4 imageCol = texture2D(image,initPos) * d;
-
-//  col += colB;
-
-
-
-
-
-  gl_FragColor = imageCol;
+  gl_FragColor = imageColA + imageColB;
 }
-
-
-
-
